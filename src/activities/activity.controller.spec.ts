@@ -1,8 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
-import { UsersService } from './users.service';
 
-import { UsersSchema } from './users.schema';
+import { ActivityController } from './activity.controller';
+import { ActivitySchema } from './activity.schema';
+import { ActivityService } from './activity.service';
+
+import { UsersService } from '../users/users.service';
+import { UsersSchema, Users } from '../users/users.schema';
+
 import { CabildoSchema } from '../cabildos/cabildo.schema';
 import { CabildoService } from '../cabildos/cabildo.service';
 
@@ -11,15 +16,22 @@ const  { setupDB } = require('../../test/setupdb');
 
 describe('UsersService', () => {
     setupDB('cibic', true);
-    let userService: UsersService;
+    let controller: ActivityController;
 
     beforeEach(async () => {
+        let activityModel = mongoose.model('Activity', ActivitySchema);
         let userModel = mongoose.model('Users', UsersSchema);
         let cabildoModel = mongoose.model('Cabildo', CabildoSchema);
         const module: TestingModule = await Test.createTestingModule({
+            controllers: [ActivityController],
             providers: [
+                ActivityService,
                 UsersService,
                 CabildoService,
+                {
+                    provide: getModelToken('Activity'),
+                    useValue: activityModel,
+                },
                 {
                     provide: getModelToken('Users'),
                     useValue: userModel,
@@ -31,15 +43,15 @@ describe('UsersService', () => {
             ],
         }).compile();
 
-        userService = module.get<UsersService>(UsersService);
+        controller = module.get<ActivityController>(ActivityController);
     });
 
     describe('root', () => {
         it('should be defined', () => {
-            expect(userService).toBeDefined();
+            expect(controller).toBeDefined();
         });
         it('should return empty set', () => {
-            return userService.getUsers()
+            return controller.getAllActivities()
                 .then(data => expect(data).toStrictEqual([]))
                 .catch(err => console.log(err));
         });

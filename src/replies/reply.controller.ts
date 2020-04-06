@@ -6,9 +6,12 @@ import {
     Param,
     Patch,
     Delete,
-    Put, UseGuards,
+    Put,
+    UseGuards,
+    UnprocessableEntityException,
 } from '@nestjs/common';
 
+import { CommentService } from '../comments/comment.service';
 import { ReplyService } from './reply.service';
 import { Reply } from './reply.schema';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -16,17 +19,27 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 @UseGuards(JwtAuthGuard)
 @Controller('reply') // http://localhost:3000/reply
 export class ReplyController {
-    constructor(private readonly replyService: ReplyService) {}
+    constructor(
+        private readonly replyService: ReplyService,
+        private readonly commentService: CommentService,
+    ) {}
 
     @Post()
-    async addReply(@Body('reply') reply: Reply) {
-        const generatedId = await this.replyService.insertReply(reply);
-        return { id: generatedId };
+    async addReply(
+        @Body('reply') reply: Reply,
+        @Body('comment') idComment: string,
+    ) {
+        if (!reply || !idComment) {
+            throw new UnprocessableEntityException();
+        }
+        const idReply = await this.replyService.insertReply(reply);
+        const comment = await this.commentService.reply(idComment, idReply);
+        return { id: idReply };
     }
 
     @Get()
     async getAllReplies() {
-        const replies = await this.replyService.getReply();
+        const replies = await this.replyService.getAllReplies();
         return replies;
     }
 
