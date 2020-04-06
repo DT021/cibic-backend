@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import {forwardRef, Module} from '@nestjs/common';
 import { MongooseModule} from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
@@ -15,7 +15,7 @@ import {AuthModule} from './auth/auth.module';
     UsersModule,
     CabildoModule,
     ActivityModule,
-	CommentModule,
+    CommentModule,
     AuthModule,
   ],
   controllers: [AppController],

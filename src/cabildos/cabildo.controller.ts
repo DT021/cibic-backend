@@ -4,12 +4,14 @@ import {
     Body,
     Get,
     Param,
-    Delete,
+    Delete, UseGuards,
 } from '@nestjs/common';
 
 import { Cabildo } from './cabildo.schema';
 import { CabildoService } from './cabildo.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('cabildos') // http://localhost:3000/cabildos
 export class CabildoController {
     constructor(private readonly cabildosService: CabildoService) {}

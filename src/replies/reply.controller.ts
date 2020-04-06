@@ -6,12 +6,14 @@ import {
     Param,
     Patch,
     Delete,
-    Put,
+    Put, UseGuards,
 } from '@nestjs/common';
 
 import { ReplyService } from './reply.service';
 import { Reply } from './reply.schema';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('reply') // http://localhost:3000/reply
 export class ReplyController {
     constructor(private readonly replyService: ReplyService) {}

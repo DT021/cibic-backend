@@ -10,21 +10,20 @@ import {
 
 import { UsersService } from './users.service';
 import { Users, Following } from './users.schema';
-import {JwtAuthGuard} from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('users') // http://localhost:3000/users
 export class UsersController {
     constructor(private readonly userService: UsersService) {}
-    
+
     @Post() // http://localhost:3000/users
     async addUser(@Body('user') user: Users)
     {
-        console.log(user);
         const generatedId = await this.userService.insertUser(user);
         return {id: generatedId};
     }
 
-    @UseGuards(JwtAuthGuard)
     @Get() // http://localhost:3000/users
     async getAllUsers()
     {

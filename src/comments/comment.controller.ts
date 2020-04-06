@@ -6,13 +6,15 @@ import {
     Param,
     Patch,
     Delete,
-    Put,
+    Put, UseGuards,
 } from '@nestjs/common';
 
 import { ActivityService } from '../activities/activity.service';
 import { CommentService } from './comment.service';
 import { Comment } from './comment.schema';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('comment') // http://localhost:3000/comment
 export class CommentController {
     constructor(

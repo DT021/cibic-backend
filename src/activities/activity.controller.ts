@@ -6,12 +6,14 @@ import {
     Param,
     Patch,
     Delete,
-    Put,
+    Put, UseGuards,
 } from '@nestjs/common';
 
 import { ActivityService } from './activity.service';
 import { Activity } from './activity.schema';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('activity') // http://localhost:3000/activity
 export class ActivityController {
     constructor(private readonly activityService: ActivityService) {}
