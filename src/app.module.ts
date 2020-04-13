@@ -13,7 +13,7 @@ import {  StatiscticModule } from './statistics/statisctic.module';
 @Module({
     imports: [
         MongooseModule.forRoot(
-            'mongodb://172.23.0.2:27017/cibic',
+            'mongodb://mongo_serve:27017/cibic',
             {
                 useUnifiedTopology: true,
                 useNewUrlParser: true,
