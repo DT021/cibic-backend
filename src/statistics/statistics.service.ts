@@ -35,34 +35,39 @@ export class StatisticService extends NestSchedule {
         await newDay.save();
     }
 
-    async getDailyId() {
-        const day = this.statisticModel.findOne({}, {}, {sort: {date: -1}}).exec();
-        return day._id;
-    }
-
     async updateNewCabildo() {
         const day = this.statisticModel.findOne({}, {}, {sort: {date: -1}}).exec();
         day.newCabildo += 1;
-        await day.save();
-    }
+        try {
+            await day.save();
+        } catch (e) {
+            console.log('Error updating new Cabildo', e);
+        }    }
 
     async updateNewUser() {
         const day = this.statisticModel.findOne({}, {}, {sort: {date: -1}}).exec();
         day.newUsers += 1;
-        await day.save();
-    }
+        try {
+            await day.save();
+        } catch (e) {
+            console.log('Error updating new User', e);
+        }    }
 
     async updateNewActivity() {
         const day = this.statisticModel.findOne({}, {}, {sort: {date: -1}}).exec();
         day.newActivities += 1;
-        await day.save();
+        try {
+            await day.save();
+        } catch (e) {
+            console.log('Error updating new activity', e);
+        }
     }
 
     @Cron('0 0 4 ? * * *' ) // everyday at 4 am
     async updateDailyActiveCabildos() {
         let count = 0;
         const day = this.statisticModel.findOne({}, {}, {sort: {date: -1}}).exec();
-        /* time configuration */
+        /*  day configuration */
         const today = new Date();
         const yesterday = new Date();
         today.setHours(0, 0, 0, 0);

@@ -13,10 +13,14 @@ import * as bcrypt from 'bcrypt';
 const saltRounds = 10;
 
 import { User } from './users.schema';
+import {StatisticService} from '../statistics/statistics.service';
 
 @Injectable()
 export class UserService {
-    constructor(@InjectModel('User') private readonly userModel: mongoose.Model<User>) {}
+    constructor(
+        @InjectModel('User') private readonly userModel: mongoose.Model<User>,
+        private readonly statisticService: StatisticService,
+        ) {}
 
     private userView = data => ({
         id: data._id,
@@ -47,6 +51,7 @@ export class UserService {
                 const result = await newUser.save();
                 return result.id as string;
             }).catch(err => console.log(err));
+        await this.statisticService.updateNewUser();
         return idUser;
     }
 

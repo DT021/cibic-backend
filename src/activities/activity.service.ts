@@ -9,11 +9,13 @@ import mongoose from 'mongoose';
 import { validateId } from '../utils';
 //import { AuthService } from '../auth/auth.service';
 import { Activity } from './activity.schema';
+import { StatisticService } from '../statistics/statistics.service';
 
 @Injectable()
 export class ActivityService {
     constructor(
         @InjectModel('Activity') private readonly activityModel: mongoose.Model<Activity>,
+        private readonly statisticService: StatisticService,
     ) {
     }
 
@@ -33,6 +35,7 @@ export class ActivityService {
         const newActivity = new this.activityModel(activity);
         const result = await newActivity.save();
         const genId = result.id;
+        await this.statisticService.updateNewActivity();
         return genId as string;
     }
 

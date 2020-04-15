@@ -13,6 +13,7 @@ import { Comment, CommentSchema } from './comment/comment.schema';
 import { ReplyService } from './reply/reply.service';
 import { Reply, ReplySchema } from './reply/reply.schema';
 import { VoteModule } from '../vote/vote.module';
+import { StatiscticModule } from '../statistics/statisctic.module';
 
 @Module({
     imports: [
@@ -25,6 +26,7 @@ import { VoteModule } from '../vote/vote.module';
         CabildoModule,
         UserModule,
         VoteModule,
+        StatiscticModule,
     ],
     controllers: [ActivityController],
     providers: [

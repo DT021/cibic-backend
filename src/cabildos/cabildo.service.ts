@@ -9,10 +9,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 
 import { Cabildo } from './cabildo.schema';
+import {StatisticService} from '../statistics/statistics.service';
 
 @Injectable()
 export class CabildoService {
-    constructor(@InjectModel('Cabildo') private readonly cabildoModel: mongoose.Model<Cabildo>) {}
+    constructor(
+        @InjectModel('Cabildo') private readonly cabildoModel: mongoose.Model<Cabildo>,
+        private readonly statisticService: StatisticService,
+    ) {}
 
     async checkCabildoName(cabildoName: string) { return await this.cabildoModel.exists({name: cabildoName}); }
     async getCabildoAdmin(idCabildo: string) { return await this.cabildoModel.findById(idCabildo, 'id'); }
@@ -30,6 +34,7 @@ export class CabildoService {
             throw new InternalServerErrorException();
         const newCabildo = new this.cabildoModel(cabildo)
         const result = await newCabildo.save();
+        await this.statisticService.updateNewCabildo();
         return result.id as string;
     }
 
